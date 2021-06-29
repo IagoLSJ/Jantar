@@ -20,7 +20,7 @@ public class Filosofo extends Thread {
     public void Come() {
         Principal.estado[this.id] = 2;
         System.out.println("O Filósofo " + getName() + " está COMENDO!");
-        System.out.println("O Hasid está com " + getName());
+        System.out.println("O Hashis está com " + getName());
         try {
             Thread.sleep(1000L);
         } catch (InterruptedException ex) {
