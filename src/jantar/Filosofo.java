@@ -38,37 +38,30 @@ public class Filosofo extends Thread {
         }
     }
 
-    public void LargarGarfo() throws InterruptedException {
+    public void LargarHashis() throws InterruptedException {
         Principal.mutex.acquire();
         Pensa();
-        /*Quando um filosofo largar os garfos, o vizinho da esquera e da direita
-        podem tentar pegar os garfos*/
-        Principal.filosofos[VizinhoEsquerda()].TentarObterGarfos();
-        Principal.filosofos[VizinhoDireita()].TentarObterGarfos();
+        Principal.filosofos[VizinhoEsquerda()].TentarObterHashis();
+        Principal.filosofos[VizinhoDireita()].TentarObterHashis();
         Principal.mutex.release();
     }
 
-    public void PegarGarfo() throws InterruptedException {
+    public void PegarHashis() throws InterruptedException {
         Principal.mutex.acquire();
         ComFome();
-        //caso a condição for verdadeira, semaforo(1), permitindo
-        //que o filosofo obtenha os garfos
-        TentarObterGarfos();        
+        TentarObterHashis();        
         Principal.mutex.release();
-        //caso a condição não seja verdadeira, o filosofo vai ficar travado
-        //no seu respectivo indice do semaforo, até chegar sua vez novamente
-        //para tentar pegar os garfos
-        Principal.semaforos[this.id].acquire();//semaforos[this.id] = new Semaphore(0)
+       
+        Principal.semaforos[this.id].acquire();
     }
 
-    public void TentarObterGarfos() {
-        //se o filosofo estiver faminto e o vizinho esquerdo e direito não
-        //estiver comendo, chama metodo come();
+    public void TentarObterHashis() {
+
         if (Principal.estado[this.id] == 1
                 && Principal.estado[VizinhoEsquerda()] != 2
                 && Principal.estado[VizinhoDireita()] != 2) {
             Come();
-            Principal.semaforos[this.id].release();//semaforos[this.id] = new Semaphore(1)
+            Principal.semaforos[this.id].release();
         } else {
             System.out.println(getName() + " não conseguiu comer!");
         }
@@ -80,9 +73,9 @@ public class Filosofo extends Thread {
         try {
             Pensa();          
             do {
-                PegarGarfo();
+                PegarHashis();
                 Thread.sleep(1000L);
-                LargarGarfo();
+                LargarHashis();
             } while (true);
         } catch (InterruptedException ex) {
             System.out.println("ERROR>" + ex.getMessage());
@@ -95,8 +88,6 @@ public class Filosofo extends Thread {
     }
 
     public int VizinhoEsquerda() {
-        // filosofo 0 recebe vizinho a esquerda 4, porque se calcularmos
-        //o resultado será -1.
         if (this.id == 0) {            
             return 4;
         } else {
